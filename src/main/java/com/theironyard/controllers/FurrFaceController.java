@@ -75,6 +75,18 @@ public class FurrFaceController {
             lindsay.petAge = 8;
             lindsay.neighborhood = "Charleston";
             users.save(lindsay);
+/*
+            User bryan = new User();
+            lindsay.username = "Bryan";
+            lindsay.password = PasswordHash.createHash("1234");
+            lindsay.petName = "Stickers";
+            lindsay.petRating = 10;
+            lindsay.aboutMe = "Loves Hugs";
+            lindsay.petType = "porcupine";
+            lindsay.imageURL = "http://bit.ly/1NHvu3D";
+            lindsay.petAge = 4;
+            lindsay.neighborhood = "The Woods";
+            users.save(bryan);*/
         }
 
     }
@@ -138,6 +150,26 @@ public class FurrFaceController {
         User user = users.findOneByUsername(username);
         return user;
     }
+
+    @RequestMapping("/edit")
+    public void editUser(HttpSession session, HttpServletResponse response, String imageURL, String petName, String petType, int petAge, String neighborhood, String aboutMe, int petRating) throws Exception {
+        String username = (String) session.getAttribute("username");
+        if (session.getAttribute("username") == null) {
+            throw new Exception("Not logged in.");
+        }
+        User user = users.findOneByUsername(username);
+        user.imageURL = imageURL;
+        user.petName = petName;
+        user.petType = petType;
+        user.petAge = petAge;
+        user.neighborhood = neighborhood;
+        user.aboutMe = aboutMe;
+        user.petRating = petRating;
+        users.save(user);
+        response.sendRedirect("/");
+    }
+    
+
     /*@RequestMapping("/randomUser")
     public User randomUser(){
         return users.findRandomUser();
