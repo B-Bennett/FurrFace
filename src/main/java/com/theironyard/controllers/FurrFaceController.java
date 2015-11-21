@@ -4,6 +4,9 @@ import com.theironyard.entities.User;
 import com.theironyard.services.UserRepository;
 import com.theironyard.utils.PasswordHash;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +40,7 @@ public class FurrFaceController {
             terry.petType = "dog";
             terry.imageURL = "http://theartmad.com/wp-content/uploads/2015/03/Baby-Bunny-11.jpg";
             terry.petAge = 8;
-            terry.neighborhood = "Charleston";
+            terry.neighborhood = "West Ashley";
             users.save(terry);
 
             User doug = new User();
@@ -49,48 +52,47 @@ public class FurrFaceController {
             doug.petType = "dog";
             doug.imageURL = "http://cp4s.laurietooker.com/wp-content/uploads/2011/04/shar-pei-Puppy.jpg";
             doug.petAge = 8;
-            doug.neighborhood = "Charleston";
+            doug.neighborhood = "James Island";
             users.save(doug);
 
             User kate = new User();
             kate.username = "Kate";
             kate.password = PasswordHash.createHash("1234");
-            kate.petName = "Katedog";
+            kate.petName = "Balto";
             kate.petRating = 10;
             kate.aboutMe = "Hi, I'm Kate and I have a dog named katedog!";
             kate.petType = "dog";
             kate.imageURL = "http://cp4s.laurietooker.com/wp-content/uploads/2011/04/shar-pei-Puppy.jpg";
             kate.petAge = 8;
-            kate.neighborhood = "Charleston";
+            kate.neighborhood = "West Ashley";
             users.save(kate);
 
             User lindsay = new User();
             lindsay.username = "Lindsay";
             lindsay.password = PasswordHash.createHash("1234");
-            lindsay.petName = "Lindsay cat";
+            lindsay.petName = "Mr. Whiskers";
             lindsay.petRating = 10;
             lindsay.aboutMe = "Hi, I'm Lindsay and I have a cat!!";
             lindsay.petType = "cat";
             lindsay.imageURL = "http://welovecatsandkittens.com/wp-content/uploads/2013/10/fluffy-kitten-ace.jpg";
             lindsay.petAge = 8;
-            lindsay.neighborhood = "Charleston";
+            lindsay.neighborhood = "South of Broad";
             users.save(lindsay);
-/*
+
             User bryan = new User();
-            lindsay.username = "Bryan";
-            lindsay.password = PasswordHash.createHash("1234");
-            lindsay.petName = "Stickers";
-            lindsay.petRating = 10;
-            lindsay.aboutMe = "Loves Hugs";
-            lindsay.petType = "porcupine";
-            lindsay.imageURL = "http://bit.ly/1NHvu3D";
-            lindsay.petAge = 4;
-            lindsay.neighborhood = "The Woods";
-            users.save(bryan);*/
+            bryan.username = "Bryan";
+            bryan.password = PasswordHash.createHash("1234");
+            bryan.petName = "Callie";
+            bryan.petType = "cat";
+            bryan.petRating = 8;
+            bryan.aboutMe = "Hi, I'm bryan and i have a kid!";
+            bryan.imageURL = "http://welovecatsandkittens.com/wp-content/uploads/2013/10/fluffy-kitten-ace.jpg";
+            bryan.petAge = 5;
+            bryan.neighborhood = "Mount Pleasant";
+            users.save(bryan);
         }
 
     }
-
 
     @RequestMapping("/addUser")
     public void addUser(HttpServletResponse response,
@@ -116,21 +118,20 @@ public class FurrFaceController {
             user.aboutMe = aboutMe;
             user.petRating = petRating;
             users.save(user);
-
-       // System.out.println("");
          session.setAttribute("username", username);
-         response.sendRedirect("/");
+         response.sendRedirect("/#homePage");
     }
+
     @RequestMapping("/login")
-    public void login(HttpSession session, HttpServletResponse response, String password) throws Exception {
-        String username = (String) session.getAttribute("username");
+    public void login(HttpSession session, HttpServletResponse response, String password, String username) throws Exception {
+        session.setAttribute("username", username);
         User user = users.findOneByUsername(username);
-        if (user == null){
-            response.sendRedirect("/");
-        } else if (!PasswordHash.validatePassword(password, user.password)) {
-                throw new Exception("Wrong password");
-               // response.sendRedirect("/");
-            }
+        if (user==null){
+            response.sendRedirect("/#newUser");
+        } else if  (!PasswordHash.validatePassword(password, user.password)) {
+                response.sendRedirect("/");
+            } else
+        response.sendRedirect("/#homePage");
         }
 
     @RequestMapping("/logout")
@@ -169,6 +170,20 @@ public class FurrFaceController {
         response.sendRedirect("/");
     }
 
+    @RequestMapping("/petType")
+    public List<User> searchPetType (String petType){
+        return users.findAllByPetType(petType);
+    }
+    @RequestMapping("/neighborhood")
+    public List<User> searchByNeighborhood (String neighborhood){
+        return users.findAllByNeighborhood( neighborhood);
+    }
+
+
+    @RequestMapping("/petAge")
+    public List<User> searchByPetAge (int petAge){
+        return users.findAllByPetAge(petAge);
+    }
 
     /*@RequestMapping("/randomUser")
     public User randomUser(){

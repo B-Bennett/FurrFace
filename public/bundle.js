@@ -10,7 +10,39 @@ module.exports = Backbone.Collection.extend({
 
 });
 
-},{"./petModel":8,"backbone":5}],2:[function(require,module,exports){
+},{"./petModel":15,"backbone":12}],2:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+var _ = require('underscore');
+var tmpl = require('./templates');
+
+
+module.exports = Backbone.View.extend({
+  template: _.template(tmpl.aside),
+  initialize: function(){
+
+  },
+  render: function(){
+    var markup = this.template({});
+    this.$el.html(markup);
+    return this;
+  },
+  sortType: function(){
+
+  },
+  sortNeighborhood: function(){
+
+  },
+  sortAge: function(){
+
+  },
+  goToProfile: function(){
+
+  }
+});
+
+},{"./templates":17,"backbone":12,"jquery":13,"underscore":14}],3:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
@@ -28,25 +60,147 @@ module.exports = Backbone.View.extend({
     this.$el.append(petView.render().el);
   },
   addAll: function(){
-    $('.content').html("");
+    $('.petView').html("");
     _.each(this.collection.models, this.addOne, this);
   },
 
 });
 
-},{"./modelView":4,"./petModel":8,"backbone":5,"jquery":6,"underscore":7}],3:[function(require,module,exports){
+},{"./modelView":10,"./petModel":15,"backbone":12,"jquery":13,"underscore":14}],4:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+var _ = require('underscore');
+var tmpl = require('./templates');
+
+
+module.exports = Backbone.View.extend({
+  template: _.template(tmpl.footer),
+  initialize: function(){
+
+  },
+  render: function(){
+    var markup = this.template({});
+    this.$el.html(markup);
+    return this;
+  },
+});
+
+},{"./templates":17,"backbone":12,"jquery":13,"underscore":14}],5:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+var _ = require('underscore');
+var tmpl = require('./templates');
+
+
+module.exports = Backbone.View.extend({
+  template: _.template(tmpl.header),
+  initialize: function(){
+
+  },
+  render: function(){
+    var markup = this.template({});
+    this.$el.html(markup);
+    return this;
+  },
+});
+
+},{"./templates":17,"backbone":12,"jquery":13,"underscore":14}],6:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+var _= require('underscore');
+var HeaderView = require('./headerView');
+var AsideView = require('./asideView');
+var FooterView = require('./footerView');
+
+module.exports = Backbone.View.extend({
+  el: '.petProfile',
+  initialize: function(){
+    var self= this;
+    var headerHTML = new HeaderView();
+    var asideHTML = new AsideView();
+    var footerHTML = new FooterView();
+      self.$el.find('header').html(headerHTML.render().el);
+      self.$el.find('aside').html(asideHTML.render().el);
+      self.$el.find('footer').html(footerHTML.render().el);
+
+
+    },
+
+
+
+  });
+
+},{"./asideView":2,"./footerView":4,"./headerView":5,"backbone":12,"jquery":13,"underscore":14}],7:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+var _= require('underscore');
+var LogInView = require('./logInView');
+var NewUserView = require('./newUserView');
+
+
+module.exports = Backbone.View.extend({
+  el: '.petProfile',
+  initialize: function(loc){
+    var self= this;
+    if(loc === 'login'){
+      var loginHTML = new LogInView();
+
+      self.$el.find('.petView').html(loginHTML.render().el);
+    }
+    else if(loc === 'newuser'){
+      var newUserHTML = new NewUserView();
+      self.$el.find('.petView').html(newUserHTML.render().el);
+    }
+    },
+
+
+
+  });
+
+},{"./logInView":8,"./newUserView":11,"backbone":12,"jquery":13,"underscore":14}],8:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+var _ = require('underscore');
+var tmpl = require('./templates');
+
+
+module.exports = Backbone.View.extend({
+  template: _.template(tmpl.loginform),
+  initialize: function(){
+
+  },
+  render: function(){
+    var markup = this.template({});
+    this.$el.html(markup);
+    return this;
+  },
+});
+
+},{"./templates":17,"backbone":12,"jquery":13,"underscore":14}],9:[function(require,module,exports){
 var $ = require('jquery');
 var AllPetsCollection = require('./allPetsCollection');
 var PetsView = require('./collectionView');
+var LayOutView = require('./layoutView');
+var Router = require('./routes');
+var Backbone = require('backbone');
+
 
 $(function () {
   var pets = new AllPetsCollection();
   pets.fetch().then(function () {
-    new PetsView({collection: pets});
+    //new PetsView({collection: pets});
+    new Router();
+    Backbone.history.start();
+
   });
 });
 
-},{"./allPetsCollection":1,"./collectionView":2,"jquery":6}],4:[function(require,module,exports){
+},{"./allPetsCollection":1,"./collectionView":3,"./layoutView":7,"./routes":16,"backbone":12,"jquery":13}],10:[function(require,module,exports){
 var Backbone = require('backbone');
 var PetModel = require('./petModel');
 var _ = require('underscore');
@@ -59,6 +213,8 @@ module.exports = Backbone.View.extend({
   className: 'pet',
   template: _.template(tmpl.pet),
   initialize: function(){},
+
+
   render: function(){
     var markup = this.template(this.model.toJSON());
     this.$el.html(markup);
@@ -68,7 +224,27 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./petModel":8,"./templates":9,"backbone":5,"jquery":6,"underscore":7}],5:[function(require,module,exports){
+},{"./petModel":15,"./templates":17,"backbone":12,"jquery":13,"underscore":14}],11:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+var _ = require('underscore');
+var tmpl = require('./templates');
+
+
+module.exports = Backbone.View.extend({
+  template: _.template(tmpl.newUserForm),
+  initialize: function(){
+    
+  },
+  render: function(){
+    var markup = this.template({});
+    this.$el.html(markup);
+    return this;
+  },
+});
+
+},{"./templates":17,"backbone":12,"jquery":13,"underscore":14}],12:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.2.3
 
@@ -1966,7 +2142,7 @@ module.exports = Backbone.View.extend({
 }));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":6,"underscore":7}],6:[function(require,module,exports){
+},{"jquery":13,"underscore":14}],13:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -11178,7 +11354,7 @@ return jQuery;
 
 }));
 
-},{}],7:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -12728,7 +12904,7 @@ return jQuery;
   }
 }.call(this));
 
-},{}],8:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
@@ -12736,18 +12912,127 @@ module.exports = Backbone.Model.extend({
   initialize: function () {}
 });
 
-},{"backbone":5}],9:[function(require,module,exports){
+},{"backbone":12}],16:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+var _ = require('underscore');
+var LayOutView = require('./layoutView');
+var PetCollectionView = require('./collectionView');
+var AllPetsCollection = require('./allPetsCollection');
+var HomePageView = require('./homePageView');
+var NewUserView = require('./newUserView');
+
+module.exports = Backbone.Router.extend({
+  routes: {
+    'homePage': 'homePage',
+    'mypet': 'editPet',
+    'petslikeme': 'petLikeMe',
+    'neighbors': 'Neighborhood',
+    'top': 'topFuzzie',
+    'newUser': 'newUser'
+  },
+  initialize: function (options) {
+    new LayOutView('login');
+  },
+  newUser: function(){
+    new LayOutView('newuser');
+  },
+  homePage: function () {
+    var pets = new AllPetsCollection();
+    pets.fetch().then(function () {
+      new PetCollectionView({collection: pets });
+      new HomePageView();
+  });
+  },
+  editPet: function () {
+    var pets = new AllPetsCollection();
+    pets.fetch().then(function () {
+      new PetCollectionView({collection: pets });
+  });
+  },
+  petLikeMe: function () {
+    var pets = new AllPetsCollection();
+    pets.fetch().then(function () {
+      new PetCollectionView({collection: pets });
+  });
+  },
+  Neighborhood: function () {
+    var pets = new AllPetsCollection();
+    pets.fetch().then(function () {
+      new PetCollectionView({collection: pets });
+  });
+  },
+  topFuzzie: function () {
+    var pets = new AllPetsCollection();
+    pets.fetch().then(function () {
+      new PetCollectionView({collection: pets });
+  });
+  }
+
+});
+
+},{"./allPetsCollection":1,"./collectionView":3,"./homePageView":6,"./layoutView":7,"./newUserView":11,"backbone":12,"jquery":13,"underscore":14}],17:[function(require,module,exports){
 module.exports = {
   pet: [
-    '<img src="<%= imageURL %>">',
-    '<h3><%= petName %></h3>',
-    '<h4><%= petAge %></h4>',
-    '<p><%= petType %></p>',
+    '<img src="<%= imageURL %>"><h3><%= petName %></h3>',
+    '<h4>,<%= petAge %></h4>',
     '<p><%= neighborhood %></p>',
     '<p><%= aboutMe %></p>',
 
-  ].join("")
+  ].join(""),
+
+  newUserForm: [
+      '<form class= "petForm" action="addUser" enctype="multipart/form-data" method="post">',
+        '<input type="text" name="username" class="form-control" id="username" placeholder="Username"><br>',
+        '<input type="text" name="password" class="form-control" id="password" placeholder="Password"><br> ',
+        '<h3>Now is the time to introduce your FurrFace!</h3>',
+        '<input type="text" name="imageURL" class="form-control" id="imageURL" placeholder="Paste an image of your pet here!">',
+        '<input type="text" name="petName" class="form-control" id="petName" placeholder="What is your pets name?">',
+        '<input type="text" name="petType" class="form-control" id="petType" placeholder="What type of pet do you have?">',
+        '<input type="text" name="petAge" class="form-control" id="petAge" placeholder="How old is your pet?">',
+        '<label for="male">What neighborhood do you live in?</label>',
+        '<select name="selectNeighborhood">',
+          '<option value="value1">James Island</option>',
+          '<option value="value2" selected>West Ashley</option>',
+          '<option value="value3">Mount Pleasant</option>',
+          '<option value="value3">South of Broad</option>',
+          '<option value="value3">Cannonborough</option>',
+          '<option value="value3">Wagner Terrace</option>',
+        '</select>',
+        '<input type="text" name="aboutMe" id="aboutMe" class="form-control" placeholder="My Pets Interests">',
+      '<button type="submit" class="btn btn-default">Submit</button>',
+      '</form>'
+
+  ].join(""),
+
+loginform: [
+
+  '<form class= "loginForm" action="login" enctype="multipart/form-data" method="post">',
+    '<input type="text" name="username" class="form-control" id="username" placeholder="Username"><br>',
+    '<input type="text" name="password" class="form-control" id="password" placeholder="Password"><br> ',
+    '<button type="submit" class="btn btn-default">Submit</button>',
+    '</form>',
+    '<a href="#newUser">Create New Login</a>'
+].join(""),
+
+aside:[
+  '<nav>',
+    '<ul>',
+      '<li><a href="#homePage">Home</a></li>',
+      '<li><a href="#homePage">Edit My Pet Page</a></li>',
+      '<li><a href="#homePage">See Pets Like Me</a></li>',
+      '<li><a href="#homePage">See Pets in My Neighborhood</a></li>',
+      '<li><a href="#homePage">Top Fuzzies</a></li>',
+    '</ul>',
+  '</nav>'
+].join(""),
+  header: [
+  '<h1>Furr Face</h1>'
+  ].join(""),
+  footer: [
+    '<h1>Footer</h1>',
+  ].join(""),
 
 };
 
-},{}]},{},[3]);
+},{}]},{},[9]);
