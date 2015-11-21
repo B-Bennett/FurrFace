@@ -168,7 +168,7 @@ public class FurrFaceController {
         users.save(user);
         response.sendRedirect("/");
     }
-    
+
 
     /*@RequestMapping("/randomUser")
     public User randomUser(){
