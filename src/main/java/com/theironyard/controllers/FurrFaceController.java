@@ -42,7 +42,7 @@ public class FurrFaceController {
             terry.petAge = 8;
             terry.neighborhood = "West Ashley";
             users.save(terry);
-
+//hello
             User doug = new User();
             doug.username = "Doug";
             doug.password = PasswordHash.createHash("1234");
@@ -50,7 +50,7 @@ public class FurrFaceController {
             doug.petRating = 10;
             doug.aboutMe = "Hi, I'm Doug and I have a dog named Rowan!";
             doug.petType = "dog";
-            doug.imageURL = "http://cp4s.laurietooker.com/wp-content/uploads/2011/04/shar-pei-Puppy.jpg";
+            doug.imageURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGYCWXg-pfA_B5_7EgYpEGaD6HRbluKULpI6ptT2q_2AgosgO_EZFz4Gb6";
             doug.petAge = 8;
             doug.neighborhood = "James Island";
             users.save(doug);
@@ -105,7 +105,7 @@ public class FurrFaceController {
                       @RequestParam(defaultValue = "1") int petAge,
                       @RequestParam(defaultValue = "0")  int petRating,
                       @RequestParam(defaultValue = "User hasn't described themselves yet") String aboutMe,
-                      @RequestParam(defaultValue = "westPhilly") String neighborhood) throws Exception {
+                      @RequestParam(defaultValue = "westPhilly") String selectNeighborhood) throws Exception {
 
             User user = new User();
             user.username = username;
@@ -114,7 +114,7 @@ public class FurrFaceController {
             user.petName = petName;
             user.petType = petType;
             user.petAge = petAge;
-            user.neighborhood = neighborhood;
+            user.neighborhood = selectNeighborhood;
             user.aboutMe = aboutMe;
             user.petRating = petRating;
             users.save(user);
