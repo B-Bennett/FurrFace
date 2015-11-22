@@ -41,16 +41,10 @@ public class User {
     @Column(nullable = false)
     public int likes;
 
-//   @Column(nullable = false)
-//   public ArrayList<String> comments;
-
-
 
     public String getFileName() {
         return imageURL;
     }
-
-
 
 
 }
