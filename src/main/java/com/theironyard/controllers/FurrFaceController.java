@@ -210,11 +210,11 @@ public class FurrFaceController {
         return user;
     }
 
-    @RequestMapping(path = "/user", method = RequestMethod.GET)
+    /*@RequestMapping(path = "/user", method = RequestMethod.GET)
     public User user(HttpSession session){
         int id = (int) session.getAttribute("id");
         return users.findOneById(id);
-    }
+    }*/
 
     @RequestMapping("/editUser")
     public void editUser(HttpSession session,
