@@ -8,6 +8,8 @@ var PetModel = require('./petModel');
 module.exports = Backbone.View.extend({
   el: ".petView",
   initialize: function(){
+    $('.petView').css('width', '65%');
+    $('button').removeClass('hidden');
     this.addAll();
   },
   addOne: function(petModel){
