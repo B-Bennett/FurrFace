@@ -54,7 +54,7 @@ module.exports = Backbone.View.extend({
   }
 });
 
-},{"./templates":22,"backbone":13,"jquery":14,"underscore":15}],4:[function(require,module,exports){
+},{"./templates":25,"backbone":13,"jquery":14,"underscore":15}],4:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
@@ -100,7 +100,7 @@ module.exports = Backbone.View.extend({
   },
 });
 
-},{"./templates":22,"backbone":13,"jquery":14,"underscore":15}],6:[function(require,module,exports){
+},{"./templates":25,"backbone":13,"jquery":14,"underscore":15}],6:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
@@ -120,7 +120,7 @@ module.exports = Backbone.View.extend({
   },
 });
 
-},{"./templates":22,"backbone":13,"jquery":14,"underscore":15}],7:[function(require,module,exports){
+},{"./templates":25,"backbone":13,"jquery":14,"underscore":15}],7:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
@@ -133,6 +133,8 @@ module.exports = Backbone.View.extend({
   el: '.petProfile',
   initialize: function(){
     var self= this;
+    $('aside').removeClass('hidden');
+    $('.petView').css('width', '65%');
     var headerHTML = new HeaderView();
     var asideHTML = new AsideView();
     var footerHTML = new FooterView();
@@ -156,6 +158,7 @@ var LogInView = require('./logInView');
 var NewUserView = require('./newUserView');
 var HeaderView = require('./headerView');
 var FooterView = require('./footerView');
+var AsideView = require('./asideView');
 
 module.exports = Backbone.View.extend({
   el: '.petProfile',
@@ -165,9 +168,11 @@ module.exports = Backbone.View.extend({
       var loginHTML = new LogInView();
       var headerHTML = new HeaderView();
       var footerHTML = new FooterView();
+      var asideHTML = new AsideView();
         self.$el.find('header').html(headerHTML.render().el);
         self.$el.find('footer').html(footerHTML.render().el);
         self.$el.find('.petView').html(loginHTML.render().el);
+        self.$el.find('aside').html(asideHTML.render().el);
 
     }
     else if(loc === 'newuser'){
@@ -180,7 +185,7 @@ module.exports = Backbone.View.extend({
 
   });
 
-},{"./footerView":5,"./headerView":6,"./logInView":9,"./newUserView":12,"backbone":13,"jquery":14,"underscore":15}],9:[function(require,module,exports){
+},{"./asideView":3,"./footerView":5,"./headerView":6,"./logInView":9,"./newUserView":12,"backbone":13,"jquery":14,"underscore":15}],9:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
@@ -203,7 +208,7 @@ module.exports = Backbone.View.extend({
   },
 });
 
-},{"./footerView":5,"./headerView":6,"./templates":22,"backbone":13,"jquery":14,"underscore":15}],10:[function(require,module,exports){
+},{"./footerView":5,"./headerView":6,"./templates":25,"backbone":13,"jquery":14,"underscore":15}],10:[function(require,module,exports){
 var $ = require('jquery');
 var AllPetsCollection = require('./allPetsCollection');
 var PetsView = require('./collectionView');
@@ -273,7 +278,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./petModel":16,"./templates":22,"backbone":13,"jquery":14,"underscore":15}],12:[function(require,module,exports){
+},{"./petModel":16,"./templates":25,"backbone":13,"jquery":14,"underscore":15}],12:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
@@ -293,7 +298,7 @@ module.exports = Backbone.View.extend({
   },
 });
 
-},{"./templates":22,"backbone":13,"jquery":14,"underscore":15}],13:[function(require,module,exports){
+},{"./templates":25,"backbone":13,"jquery":14,"underscore":15}],13:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.2.3
 
@@ -13000,7 +13005,7 @@ module.exports = Backbone.View.extend({
   initialize: function(){
     this.addAll();
     var asideHTML = new AsideView();
-    self.$el.find('aside').html(asideHTML.render().el);
+    this.$el.find('aside').html(asideHTML.render().el);
 
   },
   addOne: function(petModel){
@@ -13042,7 +13047,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./petModel":16,"./templates":22,"backbone":13,"jquery":14,"underscore":15}],21:[function(require,module,exports){
+},{"./petModel":16,"./templates":25,"backbone":13,"jquery":14,"underscore":15}],21:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 var _ = require('underscore');
@@ -13056,6 +13061,9 @@ var ProfileCollectionView = require('./profileCollectionView');
 var PetsLikeMeCollection = require('./petsLikeMeCollection');
 var NeighborhoodCollection = require('./NeighborhoodCollection');
 var AsideView = require('./asideView');
+var TopFuzziesCollection = require('./topFuzziesCollection');
+var SelectedUserCollection = require('./selectedUserCollection');
+var SelectedUserCollectionView = require('./selectedCollectionView');
 
 
 module.exports = Backbone.Router.extend({
@@ -13066,7 +13074,8 @@ module.exports = Backbone.Router.extend({
     'neighbors': 'neighborhood',
     'top': 'topFuzzie',
     'newUser': 'newUser',
-    '': 'login'
+    '': 'login',
+    'selectedUser/:userID': 'selected'
   },
   initialize: function (options) {
     new LayOutView('login');
@@ -13087,7 +13096,9 @@ module.exports = Backbone.Router.extend({
   editPet: function () {
     var profile = new ProfileCollection();
     profile.fetch().then(function () {
+      new HomePageView();
       new ProfileCollectionView({collection: profile});
+
   });
   },
   petLikeMe: function () {
@@ -13103,18 +13114,110 @@ module.exports = Backbone.Router.extend({
   });
   },
   topFuzzie: function () {
-    var pets = new AllPetsCollection();
-    pets.fetch().then(function () {
-      new PetCollectionView({collection: pets });
-  });
+    var tops = new TopFuzziesCollection();
+    tops.fetch().then(function () {
+      new PetCollectionView({collection: tops });
+      new HomePageView();
+    });
+  },
+  selected: function(userID){
+    // var newUrl = "/test?id="+userID;
+    var selected = new SelectedUserCollection({userID: userID});
+    selected.fetch().then(function(){
+
+      new HomePageView();
+      new SelectedUserCollectionView({collection: selected}
+      );
+
+    });
   }
 
 });
 
-},{"./NeighborhoodCollection":1,"./allPetsCollection":2,"./asideView":3,"./collectionView":4,"./homePageView":7,"./layoutView":8,"./newUserView":12,"./petsLikeMeCollection":17,"./profileCollection":18,"./profileCollectionView":19,"backbone":13,"jquery":14,"underscore":15}],22:[function(require,module,exports){
+},{"./NeighborhoodCollection":1,"./allPetsCollection":2,"./asideView":3,"./collectionView":4,"./homePageView":7,"./layoutView":8,"./newUserView":12,"./petsLikeMeCollection":17,"./profileCollection":18,"./profileCollectionView":19,"./selectedCollectionView":22,"./selectedUserCollection":24,"./topFuzziesCollection":26,"backbone":13,"jquery":14,"underscore":15}],22:[function(require,module,exports){
+var Backbone = require('backbone');
+var _ = require('underscore');
+var $ = require('jquery');
+Backbone.$ = $;
+var SelectedView = require('./selectedModelView');
+var PetModel = require('./petModel');
+var AsideView = require('./asideView');
+
+
+module.exports = Backbone.View.extend({
+  el: ".petView",
+  initialize: function(){
+    this.addAll();
+    var asideHTML = new AsideView();
+    this.$el.find('aside').html(asideHTML.render().el);
+
+  },
+  addOne: function(petModel){
+    var petView = new SelectedView({model: petModel});
+    this.$el.append(petView.render().el);
+  },
+  addAll: function(){
+    $('.petView').html("");
+    _.each(this.collection.models, this.addOne, this);
+  },
+
+});
+
+},{"./asideView":3,"./petModel":16,"./selectedModelView":23,"backbone":13,"jquery":14,"underscore":15}],23:[function(require,module,exports){
+var Backbone = require('backbone');
+var PetModel = require('./petModel');
+var _ = require('underscore');
+var $ = require('jquery');
+Backbone.$ = $;
+var tmpl = require('./templates');
+
+module.exports = Backbone.View.extend({
+  tagName: 'article',
+  className: 'selectedPet',
+  template: _.template(tmpl.otherProfile),// remember to make ownProfile in template
+  initialize: function(){},
+  events:{
+    'click .likes': 'like',
+
+  },
+  like: function (){
+    var likedOne = this.model;
+     likedOne.set({likes: likedOne.get('likes')+1});
+     likedOne.save();
+     console.log("this model ", this.model);
+     console.log("likeOne", likedOne);
+     this.render();
+  },
+  render: function(){
+    var markup = this.template(this.model.toJSON());
+    this.$el.html(markup);
+    return this;
+  },
+
+});
+
+},{"./petModel":16,"./templates":25,"backbone":13,"jquery":14,"underscore":15}],24:[function(require,module,exports){
+var Backbone = require('backbone');
+var PetModel = require('./petModel');
+
+module.exports = Backbone.Collection.extend({
+  url: function(){
+
+    return "/test?id=" + this.userID;
+  },
+  model: PetModel,
+  config: function(){},
+  initialize: function(options){
+    this.userID = options.userID;
+    console.log(this.userID);
+  },
+
+});
+
+},{"./petModel":16,"backbone":13}],25:[function(require,module,exports){
 module.exports = {
   pet: [
-    '<img src="<%= imageURL %>"><br>',
+    '<a href="#selectedUser/<%=id%>"><img src="<%= imageURL %>"></a><br>',
     '<h3><%= petName %></h3>  ',
     '<h4><%= petAge %> yrs old</h4> <p class="neighb"><%= neighborhood %></p>',
     '<p><%= aboutMe %></p>',
@@ -13190,7 +13293,7 @@ aside:[
       '<button class="btn"><a href="#myPet">Edit My Pet Page</a></button>',
       '<button class="btn"><a href="#petsLikeMe">See Pets Like Me</a></button>',
       '<button class="btn"><a href="#neighbors">See Pets in My Neighborhood</a></button>',
-      '<button class="btn"><a href="#homePage">Top Fuzzies</a></button>',
+      '<button class="btn"><a href="#top">Top Fuzzies</a></button>',
     '</ul>',
   '</nav>'
 ].join(""),
@@ -13239,6 +13342,28 @@ aside:[
     '</form>'
     // '</div>'
   ].join(""),
+  otherProfile: [
+    '<img src="<%= imageURL %>"><br><h3><%= petName %>, ',
+    '<%= petAge %></h3>',
+    '<br><p class="neighb"><%= neighborhood %></p>',
+    '<br><h4><%= aboutMe %></h4>',
+    '<div class="likesDiv">',
+    '<img class="theLike likes" src="redheart.png" style="height:60px; width:60px;">',
+    '<h5><%= likes %></h5>',
+    '</div>'
+  ].join(""),
 };
 
-},{}]},{},[10]);
+},{}],26:[function(require,module,exports){
+var Backbone = require('backbone');
+var PetModel = require('./petModel');
+
+module.exports = Backbone.Collection.extend({
+  url:'/top',
+  model: PetModel,
+  config: function(){},
+  initialize: function(){},
+
+});
+
+},{"./petModel":16,"backbone":13}]},{},[10]);

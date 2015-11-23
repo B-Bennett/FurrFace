@@ -11,6 +11,9 @@ var ProfileCollectionView = require('./profileCollectionView');
 var PetsLikeMeCollection = require('./petsLikeMeCollection');
 var NeighborhoodCollection = require('./NeighborhoodCollection');
 var AsideView = require('./asideView');
+var TopFuzziesCollection = require('./topFuzziesCollection');
+var SelectedUserCollection = require('./selectedUserCollection');
+var SelectedUserCollectionView = require('./selectedCollectionView');
 
 
 module.exports = Backbone.Router.extend({
@@ -21,7 +24,8 @@ module.exports = Backbone.Router.extend({
     'neighbors': 'neighborhood',
     'top': 'topFuzzie',
     'newUser': 'newUser',
-    '': 'login'
+    '': 'login',
+    'selectedUser/:userID': 'selected'
   },
   initialize: function (options) {
     new LayOutView('login');
@@ -42,7 +46,9 @@ module.exports = Backbone.Router.extend({
   editPet: function () {
     var profile = new ProfileCollection();
     profile.fetch().then(function () {
+      new HomePageView();
       new ProfileCollectionView({collection: profile});
+
   });
   },
   petLikeMe: function () {
@@ -58,10 +64,22 @@ module.exports = Backbone.Router.extend({
   });
   },
   topFuzzie: function () {
-    var pets = new AllPetsCollection();
-    pets.fetch().then(function () {
-      new PetCollectionView({collection: pets });
-  });
+    var tops = new TopFuzziesCollection();
+    tops.fetch().then(function () {
+      new PetCollectionView({collection: tops });
+      new HomePageView();
+    });
+  },
+  selected: function(userID){
+    // var newUrl = "/test?id="+userID;
+    var selected = new SelectedUserCollection({userID: userID});
+    selected.fetch().then(function(){
+
+      new HomePageView();
+      new SelectedUserCollectionView({collection: selected}
+      );
+
+    });
   }
 
 });
