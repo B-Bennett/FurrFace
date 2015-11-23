@@ -14,9 +14,7 @@ public class Comment {
     @GeneratedValue
     public int id;
 
-   public String text;
+    public String text;
 
-    @ManyToOne
-    public User user;
 }
 
