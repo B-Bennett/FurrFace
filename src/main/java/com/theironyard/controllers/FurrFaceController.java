@@ -123,18 +123,18 @@ public class FurrFaceController {
             user.password = PasswordHash.createHash(password);
             //user.fileName = imageURL;
 
-        if(!imageURL.getContentType().startsWith("image")){
-            throw new Exception("Only images are allowed!");
-        }
-        if (imageURL.isEmpty()){
-            throw new Exception("You must upload an image of your pet!");
-        }
-
+        if (!imageURL.isEmpty()){
+            if(!imageURL.getContentType().startsWith("image")){
+                throw new Exception("Only images are allowed!");
+            }
             File photoFile = File.createTempFile("imageURL", imageURL.getOriginalFilename(), new File("public"));
             FileOutputStream fos = new FileOutputStream(photoFile);
             fos.write(imageURL.getBytes());
             user.imageURL = photoFile.getName();
+        } else {
+            user.imageURL = "tumblr_m7vve1Fqli1qzfb9so1_1280.jpg";
 
+        }
 
             user.petName = petName;
             user.petType = selectPetType;
@@ -238,6 +238,9 @@ public class FurrFaceController {
             user.petAge = petAge;
         }
         if (!imageURL.isEmpty()) {
+            if(!imageURL.getContentType().startsWith("image")){
+                throw new Exception("Only images are allowed!");
+            }
             File photoFile = File.createTempFile("imageURL", imageURL.getOriginalFilename(), new File("public"));
             FileOutputStream fos = new FileOutputStream(photoFile);
             fos.write(imageURL.getBytes());
