@@ -132,7 +132,7 @@ public class FurrFaceController {
             fos.write(imageURL.getBytes());
             user.imageURL = photoFile.getName();
         } else {
-            user.imageURL = "tumblr_m7vve1Fqli1qzfb9so1_1280.jpg";
+            user.imageURL = "doug.jpg";
 
         }
 
