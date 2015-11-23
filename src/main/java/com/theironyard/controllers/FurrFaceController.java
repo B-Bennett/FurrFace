@@ -135,7 +135,6 @@ public class FurrFaceController {
             user.imageURL = "doug.jpg";
 
         }
-
             user.petName = petName;
             user.petType = selectPetType;
             user.petAge = petAge;
