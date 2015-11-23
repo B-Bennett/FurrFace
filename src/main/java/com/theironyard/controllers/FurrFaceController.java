@@ -133,7 +133,6 @@ public class FurrFaceController {
             user.imageURL = photoFile.getName();
         } else {
             user.imageURL = "doug.jpg";
-
         }
             user.petName = petName;
             user.petType = selectPetType;
