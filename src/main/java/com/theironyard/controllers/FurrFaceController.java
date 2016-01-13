@@ -67,8 +67,8 @@ public class FurrFaceController {
 
 
             User kate = new User();
+
             kate.username = "Kate";
-            kate.password = PasswordHash.createHash("1234");
             kate.petName = "Amir";
             kate.likes = 2;
             kate.aboutMe = "I love watching Animal Planet!";
